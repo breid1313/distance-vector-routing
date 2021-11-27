@@ -1,11 +1,13 @@
 public class Entity0 extends Entity
 {   
     // constant number of nodes
-    public static final int numEntities = NetworkSimulator.NUMENTITIES;
+    int numEntities = NetworkSimulator.NUMENTITIES;
+    // constant array of neighbor node indexes (to aid in iteration)
+    int[] neighbors = new int[] {0, 1, 3};
     // Perform any necessary initialization in the constructor
     public Entity0()
     {
-        // initialize all values in the DT to 0 when the node is created
+        // initialize all values in the DT to inf when the node is created
         for (int i = 0 ; i < numEntities; i++) {
             for (int j = 0; j < numEntities; j++) {
                 distanceTable[i][j] = 999;
@@ -24,16 +26,16 @@ public class Entity0 extends Entity
         int[] minDistances = new int[numEntities];
         for (int i = 0; i < numEntities; i++) {
             int minDist = 999;
-            for (int j = 1; j < numEntities; j++) {
-                if (distanceTable[i][j] < minDist) {
-                    minDist = distanceTable[i][j];
+            for (int j = 0; j < neighbors.length; j++) {
+                if (distanceTable[i][neighbors[j]] < minDist) {
+                    minDist = distanceTable[i][neighbors[j]];
                 }
             }
             minDistances[i] = minDist;
         }
 
-        // broadcast mindistances to the other nodes
-        for(int i = 1; i < numEntities; i++) {
+        // broadcast min distances to the other nodes
+        for (int i = 1; i < numEntities; i++) {
             Packet packet = new Packet(0, i, minDistances);
             NetworkSimulator.toLayer2(packet);
         }
@@ -59,9 +61,9 @@ public class Entity0 extends Entity
         int[] minDistances = new int[numEntities];
         for (int i = 0; i < numEntities; i++) {
             int minDist = 999;
-            for (int j = 1; j < numEntities; j++) {
-                if (distanceTable[i][j] < minDist) {
-                    minDist = distanceTable[i][j];
+            for (int j = 0; j < neighbors.length; j++) {
+                if (distanceTable[i][neighbors[j]] < minDist) {
+                    minDist = distanceTable[i][neighbors[j]];
                 }
             }
             minDistances[i] = minDist;
@@ -81,8 +83,8 @@ public class Entity0 extends Entity
         }
 
         // broadcast the change if one occurred during update
-        System.out.println("Detected a min distance change at Entity0... broadcasting to other nodes.\n")
         if( changed ){
+            System.out.println("Detected a min distance change at Entity0... broadcasting to other nodes.\n");
             for (int i = 1; i < numEntities; i++) {
                 Packet packet = new Packet(0, i, minDistances);
                 NetworkSimulator.toLayer2(packet);
@@ -92,7 +94,7 @@ public class Entity0 extends Entity
         // debug/info logging
         System.out.println("Entity0 Updated at:" + NetworkSimulator.time + ". Distance Table is:\n");
         printDT();
-
+    }
     
     public void linkCostChangeHandler(int whichLink, int newCost)
     {
@@ -115,14 +117,14 @@ public class Entity0 extends Entity
         distanceTable[whichLink][whichLink] = newCost;
 
         // calc min distances as before
-                // calculate our minimum costs, as in the init method
+        // calculate our minimum costs, as in the init method
         // TODO would be nice to extract this and reuse...
         int[] minDistances = new int[numEntities];
         for (int i = 0; i < numEntities; i++) {
             int minDist = 999;
-            for (int j = 1; j < numEntities; j++) {
-                if (distanceTable[i][j] < minDist) {
-                    minDist = distanceTable[i][j];
+            for (int j = 0; j < neighbors.length; j++) {
+                if (distanceTable[i][neighbors[j]] < minDist) {
+                    minDist = distanceTable[i][neighbors[j]];
                 }
             }
             minDistances[i] = minDist;
