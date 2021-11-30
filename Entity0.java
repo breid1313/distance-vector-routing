@@ -41,7 +41,7 @@ public class Entity0 extends Entity
         }
 
         // debug/info logging
-        System.out.println("Entity0 Initialized at:" + NetworkSimulator.time + ". Distance Table is:\n");
+        System.out.println("Entity0 Initialized." + ". Distance Table is:\n");
         printDT();
     }
     
@@ -92,7 +92,7 @@ public class Entity0 extends Entity
         }
 
         // debug/info logging
-        System.out.println("Entity0 Updated at:" + NetworkSimulator.time + ". Distance Table is:\n");
+        System.out.println("Entity0 Updated." + ". Distance Table is:\n");
         printDT();
     }
     
@@ -131,13 +131,13 @@ public class Entity0 extends Entity
         }
 
         // broadcast the result to neighbors
-        for(int i = 1; i < numEntities; i++) {
-            Packet packet = new Packet(0, i, minDistances);
+        for(int i = 0; i < neighbors.length; i++) {
+            Packet packet = new Packet(0, neighbors[i], minDistances);
             NetworkSimulator.toLayer2(packet);
         }
 
         // debug/info logging
-        System.out.println("Entity0 Link Change Cost Completed at:" + NetworkSimulator.time + ". Distance Table is:\n");
+        System.out.println("Entity0 Link Change Cost Completed." + " Distance Table is:\n");
         printDT();
     }
     
