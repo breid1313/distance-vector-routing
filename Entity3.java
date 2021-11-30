@@ -36,8 +36,8 @@ public class Entity3 extends Entity
         }
 
         // broadcast mindistances to the other nodes
-        for(int i = 1; i < numEntities; i++) {
-            Packet packet = new Packet(3, i, minDistances);
+        for(int i = 0; i < neighbors.length; i++) {
+            Packet packet = new Packet(3, neighbors[i], minDistances);
             NetworkSimulator.toLayer2(packet);
         }
 
@@ -86,8 +86,8 @@ public class Entity3 extends Entity
         // broadcast the change if one occurred during update
         if( changed ){
             System.out.println("Detected a min distance change at Entity3... broadcasting to other nodes.\n");
-            for (int i = 1; i < numEntities; i++) {
-                Packet packet = new Packet(3, i, minDistances);
+            for(int i = 0; i < neighbors.length; i++) {
+                Packet packet = new Packet(3, neighbors[i], minDistances);
                 NetworkSimulator.toLayer2(packet);
             }
         }
@@ -134,7 +134,7 @@ public class Entity3 extends Entity
         
         // broadcast the result to neighbors
         for(int i = 0; i < neighbors.length; i++) {
-            Packet packet = new Packet(0, neighbors[i], minDistances);
+            Packet packet = new Packet(3, neighbors[i], minDistances);
             NetworkSimulator.toLayer2(packet);
         }
 

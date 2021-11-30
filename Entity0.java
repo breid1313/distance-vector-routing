@@ -3,7 +3,7 @@ public class Entity0 extends Entity
     // constant number of nodes
     int numEntities = NetworkSimulator.NUMENTITIES;
     // constant array of neighbor node indexes (to aid in iteration)
-    int[] neighbors = new int[] {0, 1, 3};
+    int[] neighbors = new int[] {1, 2, 3};
     // Perform any necessary initialization in the constructor
     public Entity0()
     {
@@ -35,8 +35,8 @@ public class Entity0 extends Entity
         }
 
         // broadcast min distances to the other nodes
-        for (int i = 1; i < numEntities; i++) {
-            Packet packet = new Packet(0, i, minDistances);
+        for(int i = 0; i < neighbors.length; i++) {
+            Packet packet = new Packet(0, neighbors[i], minDistances);
             NetworkSimulator.toLayer2(packet);
         }
 
@@ -85,8 +85,8 @@ public class Entity0 extends Entity
         // broadcast the change if one occurred during update
         if( changed ){
             System.out.println("Detected a min distance change at Entity0... broadcasting to other nodes.\n");
-            for (int i = 1; i < numEntities; i++) {
-                Packet packet = new Packet(0, i, minDistances);
+            for(int i = 0; i < neighbors.length; i++) {
+                Packet packet = new Packet(0, neighbors[i], minDistances);
                 NetworkSimulator.toLayer2(packet);
             }
         }
